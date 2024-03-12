@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email String @unique
+  name String
+  username String @unique
+  image String?
+  bio String?
+  isVerified Boolean @default(false)
+
+
+  //we have to make a opposite relation because we have made a relation in Tweet db
+  tweet Tweet[]
+}
+
+model Tweet {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  content String
+  image String?
+
+  impression Int @default(0)
+
+  //making a relation with user of one to many because a single user can have many tweets
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+}
