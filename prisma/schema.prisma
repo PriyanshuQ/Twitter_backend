@@ -16,8 +16,8 @@ model User {
   updatedAt DateTime @updatedAt
 
   email String @unique
-  name String
-  username String @unique
+  name String?
+  username String? @unique
   image String?
   bio String?
   isVerified Boolean @default(false)
@@ -25,7 +25,27 @@ model User {
 
   //we have to make a opposite relation because we have made a relation in Tweet db
   tweet Tweet[]
+  tokens Token[]
 }
+
+model Token{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type String //Email | API
+  emailToken String? @unique
+
+  valid Boolean @default(true)
+  expiration DateTime
+
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+}
+
+// enum TokenType{
+//   EmailAPI
+// }
 
 model Tweet {
   id Int @id @default(autoincrement())
